@@ -6,24 +6,24 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 
 public class StunSlamScreen extends Screen {
-    private ButtonWidget delayButton;
 
     public StunSlamScreen() {
         super(Text.literal("Stun Slam Config"));
     }
 
     private Text delayText() {
-        return Text.literal("Stun Slam Delay: " + (StunSlamConfig.INSTANCE.delayTicks == 0 ? "Instant" : "10 Ticks"));
+        int d = StunSlamConfig.INSTANCE.delayTicks;
+        String label = d == 0 ? "Instant" : d + (d == 1 ? " Tick" : " Ticks");
+        return Text.literal("Stun Slam Delay: " + label + " (click to change)");
     }
 
     @Override
     protected void init() {
-        delayButton = ButtonWidget.builder(delayText(), b -> {
-            StunSlamConfig.INSTANCE.delayTicks = StunSlamConfig.INSTANCE.delayTicks == 0 ? 10 : 0;
+        addDrawableChild(ButtonWidget.builder(delayText(), b -> {
+            StunSlamConfig.INSTANCE.delayTicks = (StunSlamConfig.INSTANCE.delayTicks + 1) % 11;
             StunSlamConfig.save();
             b.setMessage(delayText());
-        }).dimensions(width / 2 - 100, height / 2 - 10, 200, 20).build();
-        addDrawableChild(delayButton);
+        }).dimensions(width / 2 - 125, height / 2 - 10, 250, 20).build());
 
         addDrawableChild(ButtonWidget.builder(Text.literal("Done"), b -> close())
                 .dimensions(width / 2 - 100, height / 2 + 20, 200, 20).build());
