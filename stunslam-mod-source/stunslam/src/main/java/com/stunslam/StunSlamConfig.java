@@ -13,7 +13,7 @@ public class StunSlamConfig {
 
     public static StunSlamConfig INSTANCE = new StunSlamConfig();
 
-    /** 0 = instant, 10 = ten ticks */
+    /** 0 = instant, 1 to 10 = that many ticks */
     public int delayTicks = 0;
 
     public static void load() {
@@ -25,7 +25,7 @@ public class StunSlamConfig {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (INSTANCE.delayTicks != 0 && INSTANCE.delayTicks != 10) INSTANCE.delayTicks = 0;
+        INSTANCE.delayTicks = Math.max(0, Math.min(10, INSTANCE.delayTicks));
     }
 
     public static void save() {
